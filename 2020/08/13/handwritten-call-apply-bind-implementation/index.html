@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>手写 call,apply,bind 函数实现 | 笔记</title>
+    <meta name="generator" content="VuePress 1.5.3">
+    <link rel="icon" href="/bitbug_favicon.png">
+    <meta name="description" content="call 与 apply
+> call,apply都会立即执行当前的函数
+call
+call() 方法使用一个指定的 this 值和单独给出的一个或多个参数来调用一个函数
+call语法
+使用
+`js
+function.call(thisArg, arg1, arg2, ...)
+`
+返回值
+   使用调 ...">
+    <link rel="preload" href="/assets/css/0.styles.8b754e36.css" as="style"><link rel="preload" href="/assets/js/app.bb4c6b11.js" as="script"><link rel="preload" href="/assets/js/7.730b509b.js" as="script"><link rel="preload" href="/assets/js/3.59567c86.js" as="script"><link rel="preload" href="/assets/js/11.f16cb27d.js" as="script"><link rel="prefetch" href="/assets/js/10.cfa21fb5.js"><link rel="prefetch" href="/assets/js/12.14906792.js"><link rel="prefetch" href="/assets/js/13.ab68cf40.js"><link rel="prefetch" href="/assets/js/14.6de3c66b.js"><link rel="prefetch" href="/assets/js/15.e21503d6.js"><link rel="prefetch" href="/assets/js/16.7b758b1a.js"><link rel="prefetch" href="/assets/js/17.73b95630.js"><link rel="prefetch" href="/assets/js/18.78035e32.js"><link rel="prefetch" href="/assets/js/19.d869ae14.js"><link rel="prefetch" href="/assets/js/20.d34050bd.js"><link rel="prefetch" href="/assets/js/21.140dc373.js"><link rel="prefetch" href="/assets/js/22.7d7593fb.js"><link rel="prefetch" href="/assets/js/23.779ca185.js"><link rel="prefetch" href="/assets/js/24.df37a379.js"><link rel="prefetch" href="/assets/js/25.b4e22bbf.js"><link rel="prefetch" href="/assets/js/26.b1364871.js"><link rel="prefetch" href="/assets/js/27.1ae3a3db.js"><link rel="prefetch" href="/assets/js/28.8568ff96.js"><link rel="prefetch" href="/assets/js/29.9447db08.js"><link rel="prefetch" href="/assets/js/30.7e0c5ae9.js"><link rel="prefetch" href="/assets/js/31.0864c1f4.js"><link rel="prefetch" href="/assets/js/32.a63c81ed.js"><link rel="prefetch" href="/assets/js/33.930bbe66.js"><link rel="prefetch" href="/assets/js/34.387e5c2f.js"><link rel="prefetch" href="/assets/js/4.88bdc678.js"><link rel="prefetch" href="/assets/js/5.94a57f34.js"><link rel="prefetch" href="/assets/js/6.4e7e9c69.js"><link rel="prefetch" href="/assets/js/8.e400c21b.js"><link rel="prefetch" href="/assets/js/9.8eb00829.js"><link rel="prefetch" href="/assets/js/vuejs-paginate.636421e2.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.8b754e36.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div id="vuepress-theme-blog__global-layout"><section id="header-wrapper"><header id="header"><div class="header-wrapper"><div class="title"><a href="/" class="nav-link home-link">笔记 </a></div> <div class="header-right-wrap"><ul class="nav"><li class="nav-item"><a href="/" class="nav-link">Blog</a></li><li class="nav-item"><a href="/tag/" class="nav-link">Tags</a></li></ul> <div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <!----></div></div></header></section> <div id="mobile-header"><div class="mobile-header-bar"><div class="mobile-header-title"><a href="/" class="nav-link mobile-home-link">笔记 </a> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></div> <div class="mobile-menu-wrapper"><hr class="menu-divider"> <ul class="mobile-nav"><li class="mobile-nav-item"><a href="/" class="nav-link">Blog</a></li><li class="mobile-nav-item"><a href="/tag/" class="nav-link">Tags</a></li> <li class="mobile-nav-item"><!----></li></ul></div></div></div> <div class="content-wrapper"><div id="vuepress-theme-blog__post-layout"><article itemscope="itemscope" itemtype="https://schema.org/BlogPosting" class="vuepress-blog-theme-content"><header><h1 itemprop="name headline" class="post-title">
+        
+      </h1> <div class="post-meta"><div itemprop="publisher author" itemtype="http://schema.org/Person" itemscope="itemscope" class="post-meta-author"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-navigation"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg> <span itemprop="name">pengpeng</span> <span itemprop="address">   in Beijing</span></div> <div class="post-meta-date"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> <time pubdate itemprop="datePublished" datetime="2020-8-13">
+      Thu Aug 13 2020
+    </time></div> <!----></div></header> <div itemprop="articleBody" class="content__default"><h1 id="手写-call-apply-bind-函数实现"><a href="#手写-call-apply-bind-函数实现" class="header-anchor">#</a> 手写 call,apply,bind 函数实现</h1> <h2 id="call-与-apply"><a href="#call-与-apply" class="header-anchor">#</a> call 与 apply</h2> <blockquote><p>call,apply都会立即执行当前的函数</p></blockquote> <h3 id="call"><a href="#call" class="header-anchor">#</a> call</h3> <p>call() 方法使用一个指定的 this 值和单独给出的一个或多个参数来调用一个函数</p> <h4 id="call语法"><a href="#call语法" class="header-anchor">#</a> call语法</h4> <ol><li>使用</li></ol> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>thisArg<span class="token punctuation">,</span> arg1<span class="token punctuation">,</span> arg2<span class="token punctuation">,</span> <span class="token operator">...</span><span class="token punctuation">)</span>
+</code></pre></div><ol start="2"><li><p>返回值</p> <p>使用调用者提供的this值和参数调用该函数,若该方法没有返回值,则返回undefined</p></li></ol> <h4 id="call-示例"><a href="#call-示例" class="header-anchor">#</a> call() 示例</h4> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'三儿'</span>
+<span class="token keyword">function</span> <span class="token function">fun</span><span class="token punctuation">(</span><span class="token parameter">arg1<span class="token punctuation">,</span> arg2</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>str<span class="token punctuation">)</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>arg1 <span class="token operator">+</span> arg2<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">const</span> _this <span class="token operator">=</span> <span class="token punctuation">{</span>
+    str<span class="token operator">:</span> <span class="token string">'张三'</span>
+<span class="token punctuation">}</span>
+<span class="token function">fun</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token comment">// 输出</span>
+三儿
+<span class="token number">3</span>
+<span class="token comment">// 调用 call()</span>
+<span class="token function">fun</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>_this<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token comment">// 输出</span>
+张三
+<span class="token number">3</span>
+</code></pre></div><blockquote><p>补充:</p> <p>因为 let, const 作用域的关系, 在声明全局变量后, 不会挂载到 window 对象上, 所以在直接调用时 this.str(全局), 返回为undefined;</p> <p>使用 var 将全局声明挂载到 window 上</p></blockquote> <h4 id="call-做了哪些事"><a href="#call-做了哪些事" class="header-anchor">#</a> call 做了哪些事</h4> <ol><li>检查call()第一个参数是否为null, undefined,如果是,将 window 赋值给她;</li> <li>将调用call()方法的函数(也就call调用时的this),缓存为第一个对象的属性值(_this.fn);</li> <li>执行这个fn,带上当前的入参,缓存fn返回的结果</li> <li>删除_this.fn</li> <li>return 缓存的函数调用返回结果</li></ol> <h4 id="手写实现call"><a href="#手写实现call" class="header-anchor">#</a> 手写实现call()</h4> <div class="language-js extra-class"><pre class="language-js"><code><span class="token class-name">Function</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">call0</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">_this <span class="token operator">=</span> window<span class="token punctuation">,</span> <span class="token operator">...</span>args</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    _this <span class="token operator">=</span> _this <span class="token operator">?</span> _this <span class="token operator">:</span> window
+    _this<span class="token punctuation">.</span>fn <span class="token operator">=</span> <span class="token keyword">this</span>
+    <span class="token keyword">const</span> result <span class="token operator">=</span> _this<span class="token punctuation">.</span><span class="token function">fn</span><span class="token punctuation">(</span><span class="token operator">...</span>args<span class="token punctuation">)</span>
+    <span class="token keyword">delete</span> _this<span class="token punctuation">.</span>fn
+    <span class="token keyword">return</span> result
+<span class="token punctuation">}</span>
+</code></pre></div><h4 id="call0-调用测试-示例"><a href="#call0-调用测试-示例" class="header-anchor">#</a> call0()调用测试,示例</h4> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'三儿'</span>
+<span class="token keyword">function</span> <span class="token function">fun</span><span class="token punctuation">(</span><span class="token parameter">arg1<span class="token punctuation">,</span> arg2</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>str<span class="token punctuation">)</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>arg1 <span class="token operator">+</span> arg2<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">const</span> _this <span class="token operator">=</span> <span class="token punctuation">{</span>
+    str<span class="token operator">:</span> <span class="token string">'张三'</span>
+<span class="token punctuation">}</span>
+<span class="token comment">//直接调用方法fun</span>
+<span class="token function">fun</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token comment">// 输出</span>
+三儿
+<span class="token number">3</span>
+
+<span class="token comment">// 调用 call0()</span>
+fun<span class="token punctuation">.</span><span class="token function">call0</span><span class="token punctuation">(</span>_this<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token comment">// 输出</span>
+张三
+<span class="token number">3</span>
+<span class="token comment">// 调用 call0() 第一个参数 null or undefined, {}</span>
+fun<span class="token punctuation">.</span><span class="token function">call0</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token comment">// 输出</span>
+三儿
+<span class="token number">3</span>
+fun<span class="token punctuation">.</span><span class="token function">call0</span><span class="token punctuation">(</span><span class="token keyword">undefined</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token comment">// 输出</span>
+三儿
+<span class="token number">3</span>
+fun<span class="token punctuation">.</span><span class="token function">call0</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token comment">// 输出</span>
+<span class="token keyword">undefined</span>
+<span class="token number">3</span>
+</code></pre></div><p><img src="/assets/img/call0.c55bf52c.jpg" alt="手写调用图"></p> <h3 id="apply"><a href="#apply" class="header-anchor">#</a> apply</h3> <p>与call()区别是传参为数组</p> <h4 id="手写实现-apply"><a href="#手写实现-apply" class="header-anchor">#</a> 手写实现 apply()</h4> <div class="language-js extra-class"><pre class="language-js"><code><span class="token class-name">Function</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">apply0</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">_this<span class="token punctuation">,</span> args</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    _this <span class="token operator">=</span> _this <span class="token operator">?</span> _this <span class="token operator">:</span> window
+    _this<span class="token punctuation">.</span>fn <span class="token operator">=</span> <span class="token keyword">this</span>
+    <span class="token keyword">const</span> result <span class="token operator">=</span> _this<span class="token punctuation">.</span><span class="token function">fn</span><span class="token punctuation">(</span><span class="token operator">...</span>args<span class="token punctuation">)</span>
+    <span class="token keyword">delete</span> _this<span class="token punctuation">.</span>fn
+    <span class="token keyword">return</span> result
+<span class="token punctuation">}</span>
+</code></pre></div><h2 id="bind"><a href="#bind" class="header-anchor">#</a> bind</h2> <blockquote><p>bind不会立即调用当前函数, 而是调用 bind 的返回函数;</p></blockquote> <p>返回一个新的函数，在 <code>bind()</code> 被调用时，这个新函数的 <code>this</code> 被指定为 <code>bind()</code> 的第一个参数，而其余参数将作为新函数的参数，供调用时使用</p> <h3 id="手写实现-apply-2"><a href="#手写实现-apply-2" class="header-anchor">#</a> 手写实现 apply()</h3> <div class="language-js extra-class"><pre class="language-js"><code><span class="token class-name">Function</span><span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">bind0</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+   <span class="token keyword">var</span> func <span class="token operator">=</span> <span class="token keyword">this</span>
+   <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> func <span class="token operator">!==</span> <span class="token string">'function'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+     <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">TypeError</span><span class="token punctuation">(</span><span class="token string">&quot;not a function&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token punctuation">}</span>
+   <span class="token keyword">var</span> _this <span class="token operator">=</span> arguments<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">?</span> arguments<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">:</span> window
+   <span class="token keyword">var</span> args <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>arguments<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token keyword">return</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+   	funArgs <span class="token operator">=</span> args<span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>arguments<span class="token punctuation">)</span><span class="token punctuation">)</span>
+   	<span class="token keyword">return</span> <span class="token function">func</span><span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span>_this<span class="token punctuation">,</span> funArgs<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h3 id="apply0调用测试-示例"><a href="#apply0调用测试-示例" class="header-anchor">#</a> apply0调用测试,示例</h3> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'三儿'</span>
+<span class="token keyword">function</span> <span class="token function">fun</span><span class="token punctuation">(</span><span class="token parameter">arg1<span class="token punctuation">,</span> arg2</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>str<span class="token punctuation">)</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>arg1 <span class="token operator">+</span> arg2<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">const</span> _this <span class="token operator">=</span> <span class="token punctuation">{</span>
+    str<span class="token operator">:</span> <span class="token string">'张三'</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">let</span> fun1 <span class="token operator">=</span> fun<span class="token punctuation">.</span><span class="token function">bind0</span><span class="token punctuation">(</span>_this<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token function">fun1</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment">//输出</span>
+张三
+<span class="token number">3</span>
+<span class="token keyword">let</span> fun2 <span class="token operator">=</span> fun<span class="token punctuation">.</span><span class="token function">bind0</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token function">fun2</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment">//输出</span>
+三儿
+<span class="token number">3</span>
+
+</code></pre></div></div> <footer><!----> <hr> <!----></footer></article> <div class="sticker vuepress-toc"><div class="vuepress-toc-item vuepress-toc-h2 active"><a href="#call-与-apply" title="call 与 apply">call 与 apply</a></div><div class="vuepress-toc-item vuepress-toc-h3"><a href="#call" title="call">call</a></div><div class="vuepress-toc-item vuepress-toc-h3"><a href="#apply" title="apply">apply</a></div><div class="vuepress-toc-item vuepress-toc-h2"><a href="#bind" title="bind">bind</a></div><div class="vuepress-toc-item vuepress-toc-h3"><a href="#手写实现-apply-2" title="手写实现 apply()">手写实现 apply()</a></div><div class="vuepress-toc-item vuepress-toc-h3"><a href="#apply0调用测试-示例" title="apply0调用测试,示例">apply0调用测试,示例</a></div></div></div></div> <footer class="footer" data-v-fdbf4940><div class="footer-left-wrap" data-v-fdbf4940><ul class="contact" data-v-fdbf4940><li class="contact-item" data-v-fdbf4940><a href="https://github.com/yunpengGit" target="_blank" rel="noopener noreferrer" class="nav-link external" data-v-fdbf4940><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github" data-v-fdbf4940><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" data-v-fdbf4940></path></svg>
+          
+        </a></li><li class="contact-item" data-v-fdbf4940><a href="https://twitter.com/_ulivz" target="_blank" rel="noopener noreferrer" class="nav-link external" data-v-fdbf4940><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-twitter" data-v-fdbf4940><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z" data-v-fdbf4940></path></svg>
+          
+        </a></li></ul></div> <div class="footer-right-wrap" data-v-fdbf4940><ul class="copyright" data-v-fdbf4940><li class="copyright-item" data-v-fdbf4940><a href="https://policies.google.com/privacy?hl=en-US" target="_blank" rel="noopener noreferrer" class="nav-link external" data-v-fdbf4940>Privacy Policy</a></li><li class="copyright-item" data-v-fdbf4940><a href="/2020/08/13/handwritten-call-apply-bind-implementation/.html" class="nav-link" data-v-fdbf4940>MIT Licensed | Copyright © 2018-present Vue.js</a></li></ul></div></footer></div><div class="global-ui"><!----></div></div>
+    <script src="/assets/js/app.bb4c6b11.js" defer></script><script src="/assets/js/7.730b509b.js" defer></script><script src="/assets/js/3.59567c86.js" defer></script><script src="/assets/js/11.f16cb27d.js" defer></script>
+  </body>
+</html>
